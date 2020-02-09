@@ -1,10 +1,31 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{default}">
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>S'enregistrer</title>
 </head>
 <body>
-
+<div layout:fragment="content">
+    <form class="form-signin" th:action="@{/signup}" method="post">
+        <img class="mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72" />
+        <h1 class="h3 mb-3 font-weight-normal">Création d'un compte</h1>
+        <div th:if="${param.error}">
+            Email et mot de passe invalide.
+        </div>
+        <div th:if="${param.logout}">
+            Vous avez été déconnecté.
+        </div>
+        <label for="inputEmail" class="sr-only">Email</label>
+        <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email" required="" />
+        <label for="inputPassword" class="sr-only">Mot de passe</label>
+        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Mot de passe" required="" />
+        <label for="inputName" class="sr-only">Nom d'utilisateur</label>
+        <input type="text" name="name" id="inputEmail" class="form-control" placeholder="Nom d'utilisateur" required="" />
+        <button class="btn btn-lg btn-primary btn-block" type="submit">S'enregistrer</button>
+    </form>
+    <form class="form-signin" th:action="@{/login}" method="get">
+        <button class="btn btn-md btn-success btn-block" type="Submit">Se connecter</button>
+    </form>
+</div>
 </body>
 </html>

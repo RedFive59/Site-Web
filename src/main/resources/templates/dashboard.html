@@ -2,12 +2,12 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{default}">
 <head>
-    <title>Dashboard</title>
+    <title>Tableau de bord</title>
 </head>
 <body>
 <div layout:fragment="content">
-    <h1 th:inline="text">Hello [[${#httpServletRequest.remoteUser}]]!</h1>
-    <h2>This is your Dashboard</h2>
+    <h1 th:inline="text">Bonjour [[${#httpServletRequest.remoteUser}]]!</h1>
+    <h2>Tableau de bord</h2>
 </div>
 </body>
 </html>

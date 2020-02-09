@@ -2,64 +2,27 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{default}">
 <head>
-    <title>Login</title>
+    <title>Identification</title>
 </head>
 <body class="text-center">
 <div layout:fragment="content">
     <form class="form-signin" th:action="@{/login}" method="post">
         <img class="mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72" />
-        <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
+        <h1 class="h3 mb-3 font-weight-normal">Connexion à votre compte</h1>
         <div th:if="${param.error}">
-            Invalid email and password.
+            Email et mot de passe invalide.
         </div>
         <div th:if="${param.logout}">
-            You have been logged out.
+            Vous avez été déconnecté.
         </div>
-        <label for="inputEmail" class="sr-only">Email address</label>
+        <label for="inputEmail" class="sr-only">Adresse mail</label>
         <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email" required="" />
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required="" />
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign in</button>
+        <label for="inputPassword" class="sr-only">Mot de passe</label>
+        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Mot de passe" required="" />
+        <button class="btn btn-lg btn-primary btn-block" type="submit">Se connecter</button>
     </form>
     <form class="form-signin" th:action="@{/signup}" method="get">
-        <button class="btn btn-md btn-success btn-block" type="Submit">Signup Here</button>
+        <button class="btn btn-md btn-success btn-block" type="Submit">S'enregistrer</button>
     </form>
 </div>
 </body>
-</html>
-If you don't configure the username field in the Spring Web Security configuration you should use input name `username`.
-
-
-Finally, open and edit `signup.html` then replace all HTML tags with these tags.
-
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
-      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{default}">
-<head>
-    <title>Signup</title>
-</head>
-<body>
-<div layout:fragment="content">
-    <form class="form-signin" th:action="@{/signup}" method="post">
-        <img class="mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72" />
-        <h1 class="h3 mb-3 font-weight-normal">Signup Here</h1>
-        <div th:if="${param.error}">
-            Invalid email and password.
-        </div>
-        <div th:if="${param.logout}">
-            You have been logged out.
-        </div>
-        <label for="inputUsername" class="sr-only">Username</label>
-        <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Username" required="" />
-        <label for="inputPassword" class="sr-only">Password</label>
-        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Password" required="" />
-        <label for="inputFullname" class="sr-only">Full Name</label>
-        <input type="text" name="fullname" id="inputEmail" class="form-control" placeholder="Fullname" required="" />
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Sign Up</button>
-    </form>
-    <form class="form-signin" th:action="@{/login}" method="get">
-        <button class="btn btn-md btn-success btn-block" type="Submit">Sign In</button>
-    </form>
-</div>
-</body>
-</html>

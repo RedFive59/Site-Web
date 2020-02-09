@@ -45,13 +45,13 @@ public class LoginController {
         if (userExists != null) {
             bindingResult
                     .rejectValue("email", "error.user",
-                            "There is already a user registered with the username provided");
+                            "Il existe déjà un compte utilisant cette email");
         }
         if (bindingResult.hasErrors()) {
             modelAndView.setViewName("signup");
         } else {
             userService.saveUser(user);
-            modelAndView.addObject("successMessage", "User has been registered successfully");
+            modelAndView.addObject("successMessage", "L'utilisateur a bien été enregistré");
             modelAndView.addObject("user", new User());
             modelAndView.setViewName("login");
 
@@ -66,8 +66,8 @@ public class LoginController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByEmail(auth.getName());
         modelAndView.addObject("currentUser", user);
-        modelAndView.addObject("name", "Welcome " + user.getName());
-        modelAndView.addObject("message", "Content Available Only for logged users");
+        modelAndView.addObject("name", "Bienvenue " + user.getName());
+        modelAndView.addObject("message", "Il vous faut être connecté pour accéder à ceci");
         modelAndView.setViewName("dashboard");
         return modelAndView;
     }
