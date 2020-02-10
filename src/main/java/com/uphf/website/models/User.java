@@ -3,25 +3,24 @@ package com.uphf.website.models;
 import java.util.Set;
 
 import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.index.IndexDirection;
-import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "user") // Permet de déclarer cette objet en tant que doc
+@Document(collection = "user")
 public class User {
     @Id
     private String id;
-    @Indexed(unique = true, direction = IndexDirection.DESCENDING)
     private String email;
     private String password;
     private String name;
     private String description;
     private boolean enabled;
+    private String spotifyToken;
     @DBRef
     private Set<Role> roles;
+    @DBRef
+    private Set<Music> musics;
 
-    // Getters & Setters
     public String getId() {
         return id;
     }
@@ -70,11 +69,27 @@ public class User {
         this.enabled = enabled;
     }
 
+    public String getSpotifyToken() {
+        return spotifyToken;
+    }
+
+    public void setSpotifyToken(String spotifyToken) {
+        this.spotifyToken = spotifyToken;
+    }
+
+
     public Set<Role> getRoles() {
         return roles;
     }
 
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
+    }
+    public Set<Music> getMusics() {
+        return musics;
+    }
+
+    public void setMusics(Set<Music> musics) {
+        this.musics = musics;
     }
 }

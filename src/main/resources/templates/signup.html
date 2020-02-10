@@ -4,10 +4,10 @@
 <head>
     <title>S'enregistrer</title>
 </head>
-<body>
+<body class="text-center">
 <div layout:fragment="content">
     <form class="form-signin" th:action="@{/signup}" method="post">
-        <img class="mb-4" src="https://getbootstrap.com/assets/brand/bootstrap-solid.svg" alt="" width="72" height="72" />
+        <i class="fas fa-user-plus mb-4" style="font-size:64px"></i>
         <h1 class="h3 mb-3 font-weight-normal">Création d'un compte</h1>
         <div th:if="${param.error}">
             Email et mot de passe invalide.
@@ -20,7 +20,7 @@
         <label for="inputPassword" class="sr-only">Mot de passe</label>
         <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Mot de passe" required="" />
         <label for="inputName" class="sr-only">Nom d'utilisateur</label>
-        <input type="text" name="name" id="inputEmail" class="form-control" placeholder="Nom d'utilisateur" required="" />
+        <input type="text" name="name" id="inputName" class="form-control" placeholder="Nom d'utilisateur" required="" />
         <button class="btn btn-lg btn-primary btn-block" type="submit">S'enregistrer</button>
     </form>
     <form class="form-signin" th:action="@{/login}" method="get">

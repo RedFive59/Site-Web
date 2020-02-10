@@ -6,10 +6,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import com.uphf.website.models.Role;
-import com.uphf.website.models.User;
-import com.uphf.website.repository.RoleRepository;
-import com.uphf.website.repository.UserRepository;
+import com.uphf.website.models.*;
+import com.uphf.website.repository.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -27,6 +25,10 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
+    private GroupRepository groupRepository;
+    @Autowired
+    private MusicRepository musicRepository;
+    @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     // Récupère un utilisateur grâce à son mail
@@ -43,7 +45,7 @@ public class CustomUserDetailsService implements UserDetailsService {
         userRepository.save(user);
     }
 
-    // Pour gérer le système d'authentification, vérifie ou compare le nom d'utilisatuer avec les utilisateurs de la BDD MongoDB
+    // Pour gérer le système d'authentification, vérifie ou compare le nom d'utilisateur avec les utilisateurs de la BDD MongoDB
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 

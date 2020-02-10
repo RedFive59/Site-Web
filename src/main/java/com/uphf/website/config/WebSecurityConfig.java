@@ -48,13 +48,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/login").permitAll()
                 .antMatchers("/signup").permitAll()
                 .antMatchers("/dashboard/**").hasAuthority("ADMIN").anyRequest()
-                .authenticated().and().csrf().disable().formLogin().successHandler((AuthenticationSuccessHandler) customizeAuthenticationSuccessHandler)
-                .loginPage("/login").failureUrl("/login?error=true")
-                .usernameParameter("email")
-                .passwordParameter("password")
-                .and().logout()
-                .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
-                .logoutSuccessUrl("/").and().exceptionHandling();
+                .authenticated()
+                .and()
+                    .formLogin()
+                    .successHandler((AuthenticationSuccessHandler) customizeAuthenticationSuccessHandler)
+                    .loginPage("/login")
+                    .failureUrl("/login?error=true")
+                    .usernameParameter("email")
+                    .passwordParameter("password")
+                .and()
+                    .logout()
+                    .logoutRequestMatcher(new AntPathRequestMatcher("/logout"))
+                    .logoutSuccessUrl("/")
+                    .invalidateHttpSession(true)
+                .and()
+                    .exceptionHandling()
+                .and()
+                    .csrf()
+                    .disable();
     }
 
     // Exclusion des ressources statiques de l'app web
