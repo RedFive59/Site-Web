@@ -46,3 +46,20 @@ body {
 .form-signin input[type="text"] {
   margin-bottom: 10px;
 }
+
+table.board {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.board tr td {
+    border: 1px solid black;
+    height : 100px;
+    border: solid #ccc 1px;
+    padding: 5px 7px;
+}
+
+.board table tr th {
+    border: none;
+    padding-top: 5px;
+}

@@ -3,10 +3,12 @@ package com.uphf.website;
 import com.uphf.website.models.*;
 import com.uphf.website.repository.*;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.Date;
 import java.util.Arrays;
@@ -20,6 +22,9 @@ public class WebsiteApplication {
 		SpringApplication.run(WebsiteApplication.class, args);
 	}
 
+	@Autowired
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+
 	@Bean
 	CommandLineRunner init(RoleRepository roleRepository, UserRepository userRepository, GroupRepository groupRepository, MusicRepository musicRepository) {
 
@@ -28,6 +33,7 @@ public class WebsiteApplication {
 			Role adminRole = roleRepository.findByRole("ADMIN");
 			if (adminRole == null) {
 				Role newAdminRole = new Role();
+				newAdminRole.setId(0);
 				newAdminRole.setRole("ADMIN");
 				roleRepository.save(newAdminRole);
 			}
@@ -35,6 +41,7 @@ public class WebsiteApplication {
 			Role userRole = roleRepository.findByRole("USER");
 			if (userRole == null) {
 				Role newUserRole = new Role();
+				newUserRole.setId(1);
 				newUserRole.setRole("USER");
 				roleRepository.save(newUserRole);
 			}
@@ -44,7 +51,7 @@ public class WebsiteApplication {
 				User newUser = new User();
 				newUser.setEmail("email@test.fr");
 				newUser.setEnabled(true);
-				newUser.setPassword("defaultPassword");
+				newUser.setPassword(bCryptPasswordEncoder.encode("pass"));
 				newUser.setName("userTest");
 				Role defaultUserRole = roleRepository.findByRole("USER");
 				newUser.setRoles(new HashSet<>(Arrays.asList(defaultUserRole)));

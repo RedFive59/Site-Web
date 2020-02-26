@@ -6,14 +6,14 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "role")
 public class Role {
     @Id
-    private String id;
+    private int id;
     private String role;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

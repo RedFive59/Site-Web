@@ -36,23 +36,24 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         auth
                 .userDetailsService(userDetailsService)
                 .passwordEncoder(bCryptPasswordEncoder);
-
     }
 
     // Sécurisation des requêtes HTTP + ajout des redirections du système de login
+    // https://www.baeldung.com/java-config-spring-security#HTTP=
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
+        http.authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/signup").permitAll()
-                .antMatchers("/dashboard/**").hasAuthority("ADMIN").anyRequest()
-                .authenticated()
+                .antMatchers("/dashboard/**").authenticated()
+                .anyRequest()
+                    .authenticated()
                 .and()
                     .formLogin()
                     .successHandler((AuthenticationSuccessHandler) customizeAuthenticationSuccessHandler)
                     .loginPage("/login")
+                    .defaultSuccessUrl("/")
                     .failureUrl("/login?error=true")
                     .usernameParameter("email")
                     .passwordParameter("password")
@@ -65,7 +66,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                     .exceptionHandling()
                 .and()
                     .csrf()
-                    .disable();
+                .and()
+                    .sessionManagement().maximumSessions(1).expiredUrl("/login");
     }
 
     // Exclusion des ressources statiques de l'app web

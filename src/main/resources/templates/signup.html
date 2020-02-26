@@ -6,7 +6,7 @@
 </head>
 <body class="text-center">
 <div layout:fragment="content">
-    <form class="form-signin" th:action="@{/signup}" method="post">
+    <form class="form-signin" th:action="@{/signup}" method="post" autocomplete="on">
         <i class="fas fa-user-plus mb-4" style="font-size:64px"></i>
         <h1 class="h3 mb-3 font-weight-normal">Création d'un compte</h1>
         <div th:if="${param.error}">

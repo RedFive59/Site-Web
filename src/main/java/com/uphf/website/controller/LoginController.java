@@ -5,6 +5,7 @@ import javax.validation.Valid;
 import com.uphf.website.models.User;
 import com.uphf.website.services.CustomUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -22,6 +23,12 @@ public class LoginController {
     // Modèle et vue pour le login
     @RequestMapping(value = "/login", method = RequestMethod.GET)
     public ModelAndView login() {
+        // Vérification que l'utilisateur n'est pas déjà connecté
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!(auth instanceof AnonymousAuthenticationToken)) {
+            return new ModelAndView("forward:/home");
+        }
+
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.setViewName("login");
         return modelAndView;
@@ -30,6 +37,12 @@ public class LoginController {
     // Modèle et vue pour le register
     @RequestMapping(value = "/signup", method = RequestMethod.GET)
     public ModelAndView signup() {
+        // Vérification que l'utilisateur n'est pas déjà connecté
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if (!(auth instanceof AnonymousAuthenticationToken)) {
+            return new ModelAndView("forward:/home");
+        }
+
         ModelAndView modelAndView = new ModelAndView();
         User user = new User();
         modelAndView.addObject("user", user);
@@ -65,8 +78,10 @@ public class LoginController {
         ModelAndView modelAndView = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByEmail(auth.getName());
+        /*
         modelAndView.addObject("currentUser", user);
         modelAndView.addObject("name", "Bienvenue " + user.getName());
+        */
         modelAndView.addObject("message", "Il vous faut être connecté pour accéder à ceci");
         modelAndView.setViewName("dashboard");
         return modelAndView;

@@ -9,7 +9,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @Document(collection = "user")
 public class User {
     @Id
-    private String id;
+    private int id;
     private String email;
     private String password;
     private String name;
@@ -21,11 +21,11 @@ public class User {
     @DBRef
     private Set<Music> musics;
 
-    public String getId() {
+    public int getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(int id) {
         this.id = id;
     }
 

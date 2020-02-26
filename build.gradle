@@ -14,6 +14,7 @@ repositories {
 
 dependencies {
 	compile 'se.michaelthelin.spotify:spotify-web-api-java:4.2.1'
+	compile 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
