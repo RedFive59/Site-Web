@@ -20,9 +20,9 @@
                     <td th:text="${music.title}"></td>
                     <td th:text="${music.artist}"></td>
                     <td th:text="${music.user}"></td>
-                    <td th:text="${music.date}"></td>
-                    <td sec:authorize="isAuthenticated()"><a th:href="@{/edit/{id}(id=${music.id})}">Editer</a></td>
-                    <td sec:authorize="isAuthenticated()"><a th:href="@{/delete/{id}(id=${music.id})}">Supprimer</a></td>
+                    <td th:text="${#dates.format(music.date,'MM/dd/yyyy HH:mm')}"></td>
+                    <td sec:authorize="isAuthenticated()" th:if="${#authentication.getPrincipal().getId() == music.user.id}"><a th:href="@{/edit/{id}(id=${music.id})}">Editer</a></td>
+                    <td sec:authorize="isAuthenticated()" th:if="${#authentication.getPrincipal().getId() == music.user.id}"><a th:href="@{/delete/{id}(id=${music.id})}">Supprimer</a></td>
                 </tr>
                 </tbody>
             </table>

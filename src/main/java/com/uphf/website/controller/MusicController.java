@@ -38,14 +38,18 @@ public class MusicController {
 
     @PostMapping("/addmusic")
     public String addMusic(@Valid Music music, BindingResult bindingResult, Model model) {
-        Music musicExists = musicRepository.findByLink(music.getLink());
+        String link = checkLink(music.getLink());
+        Music musicExists = musicRepository.findByLink(link);
         if (musicExists != null) {
             bindingResult
                     .rejectValue("link", "error.link",
                             "Il existe déjà ce lien sur le site");
+            return "add-music";
         }
-        String link = checkLink(music.getLink());
-        if (bindingResult.hasErrors() || link == null) {
+        if (link == null) {
+            bindingResult
+                    .rejectValue("link", "error.link",
+                            "Le lien est erroné");
             return "add-music";
         } else {
             Date date = new Date();
@@ -90,6 +94,8 @@ public class MusicController {
         if(link.startsWith("spotify:track:")){
             return link.substring(14, 36);
         }
+        if(link.length() == 22 && !link.contains("<") && !link.contains(">") && !link.contains(":") && !link.contains("/")&& !link.contains("."))
+            return link;
         return null;
     }
 
@@ -109,11 +115,33 @@ public class MusicController {
     public String updateMusic(@PathVariable("id") String id, @Valid Music music,
                               BindingResult result, Model model) {
         if (result.hasErrors()) {
-            music.setId(id);
             return "update-music";
         }
-
-        musicRepository.save(music);
+        String link = checkLink(music.getLink());
+        if (link == null) {
+            result
+                    .rejectValue("link", "error.link",
+                            "Le lien est erroné");
+            return "update-music";
+        } else {
+            Date date = new Date();
+            music.setDate(date);
+            music.setLink(link);
+            music.setDownvote(0);
+            // Get the user logged on
+            Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+            if (principal instanceof User) {
+                User user = ((User) principal);
+                music.addUserToUserVote(user);
+                music.setUser(user);
+                music.setUpvote(1);
+            } else {
+                music.addUserToUserVote(null);
+                music.setUser(null);
+                music.setUpvote(0);
+            }
+            musicRepository.save(music);
+        }
         model.addAttribute("musics", musicRepository.findAll());
         return "home";
     }

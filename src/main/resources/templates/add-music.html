@@ -14,17 +14,17 @@
         <div class="row">
             <label for="link">Lien</label>
             <input type="text" th:field="*{link}" id="link" placeholder="Lien">
-            <span th:if="${#fields.hasErrors('link')}" th:errors="*{link}"></span>
+            <span class="alert alert-danger" th:if="${#fields.hasErrors('link')}" th:errors="*{link}"></span>
         </div>
         <div class="row">
             <label for="artist">Artiste</label>
             <input type="text" th:field="*{artist}" id="artist" placeholder="Artiste">
-            <span th:if="${#fields.hasErrors('artist')}" th:errors="*{artist}"></span>
+            <span class="alert alert-danger" th:if="${#fields.hasErrors('artist')}" th:errors="*{artist}"></span>
         </div>
         <div class="row">
             <label for="title">Titre</label>
             <input type="text" th:field="*{title}" id="title" placeholder="Titre">
-            <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
+            <span class="alert alert-danger" th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
         </div>
         <div class="submit">
             <input type="submit" value="Ajouter la musique">
