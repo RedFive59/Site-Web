@@ -4,27 +4,36 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import javax.validation.constraints.NotBlank;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Document(collection = "music") // Permet de déclarer cette objet en tant que doc
 public class Music {
 
     @Id
-    private int id;
+    private String id;
+    @NotBlank
     private String title;
+    @NotBlank
     private String artist;
     private Date date;
     private String link;
-    private int upvote;
-    private int downvote;
+    private Integer upvote;
+    private Integer downvote;
     @DBRef
     private User user;
+    @DBRef
+    private List<User> userVote;
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -44,8 +53,10 @@ public class Music {
         this.artist = artist;
     }
 
-    public Date getDate() {
-        return date;
+    public String getDate() {
+        DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+        Date date = new Date();
+        return dateFormat.format(date);
     }
 
     public void setDate(Date date) {
@@ -60,19 +71,19 @@ public class Music {
         this.link = link;
     }
 
-    public int getUpvote() {
+    public Integer getUpvote() {
         return upvote;
     }
 
-    public void setUpvote(int upvote) {
+    public void setUpvote(Integer upvote) {
         this.upvote = upvote;
     }
 
-    public int getDownvote() {
+    public Integer getDownvote() {
         return downvote;
     }
 
-    public void setDownvote(int downvote) {
+    public void setDownvote(Integer downvote) {
         this.downvote = downvote;
     }
 
@@ -82,5 +93,20 @@ public class Music {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public List<User> getUserVote() {
+        return userVote;
+    }
+
+    public void setUserVote(List<User> userVote) {
+        this.userVote = userVote;
+    }
+
+    public void addUserToUserVote(User user) {
+        if(this.userVote == null){
+            this.userVote = new ArrayList<User>();
+        }
+        this.userVote.add(user);
     }
 }

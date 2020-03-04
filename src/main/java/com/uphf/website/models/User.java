@@ -1,31 +1,90 @@
 package com.uphf.website.models;
 
-import java.util.Set;
+import java.util.*;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 @Document(collection = "user")
-public class User {
+public class User implements UserDetails {
+
     @Id
-    private int id;
+    private String id;
     private String email;
     private String password;
     private String name;
     private String description;
-    private boolean enabled;
     private String spotifyToken;
+    private boolean enabled;
+    private boolean accountNonExpired;
+    private boolean accountNonLocked;
+    private boolean credentialsNonExpired;
+    private Collection<? extends GrantedAuthority> authorities;
     @DBRef
     private Set<Role> roles;
     @DBRef
     private Set<Music> musics;
 
-    public int getId() {
+    public User(){
+        this.email = "undefined";
+        this.password = "undefined";
+        this.name = "undefined";
+        this.description = "undefined";
+        this.spotifyToken = "undefined";
+        this.enabled = false;
+        this.accountNonExpired = true;
+        this.accountNonLocked = true;
+        this.credentialsNonExpired = true;
+        this.authorities = null;
+        this.roles = new HashSet<>();
+        this.musics = new HashSet<>();
+    }
+
+    public User(String name, String email, String password, Role role){
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.description = "undefined";
+        this.spotifyToken = "undefined";
+        this.enabled = true;
+        this.accountNonExpired = true;
+        this.accountNonLocked = true;
+        this.credentialsNonExpired = true;
+        this.roles = new HashSet<>(Arrays.asList(role));
+        Set<GrantedAuthority> roles = new HashSet<>();
+        roles.add(new SimpleGrantedAuthority(role.getRole()));
+        this.authorities = new ArrayList<>(roles);
+        this.musics = new HashSet<>();
+    }
+
+    public User(String name, String email, String password, Set<Role> userRoles){
+        this.email = email;
+        this.password = password;
+        this.name = name;
+        this.description = "undefined";
+        this.spotifyToken = "undefined";
+        this.enabled = true;
+        this.accountNonExpired = true;
+        this.accountNonLocked = true;
+        this.credentialsNonExpired = true;
+        this.roles = userRoles;
+        Set<GrantedAuthority> roles = new HashSet<>();
+        userRoles.forEach((role) -> {
+            roles.add(new SimpleGrantedAuthority(role.getRole()));
+        });
+        this.authorities = new ArrayList<>(roles);
+        this.musics = new HashSet<>();
+    }
+
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -37,8 +96,33 @@ public class User {
         this.email = email;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return authorities;
+    }
+
     public String getPassword() {
         return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return name;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return accountNonExpired;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return credentialsNonExpired;
     }
 
     public void setPassword(String password) {
@@ -91,5 +175,9 @@ public class User {
 
     public void setMusics(Set<Music> musics) {
         this.musics = musics;
+    }
+
+    public String toString(){
+        return this.name;
     }
 }

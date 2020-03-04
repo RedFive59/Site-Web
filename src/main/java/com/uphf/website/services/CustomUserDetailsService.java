@@ -31,7 +31,7 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    // Récupère un utilisateur grâce à son mail
+    //Get user from mail
     public User findUserByEmail(String email) {
         return userRepository.findByEmail(email);
     }
@@ -52,13 +52,21 @@ public class CustomUserDetailsService implements UserDetailsService {
         User user = userRepository.findByEmail(email);
         if(user != null) {
             List<GrantedAuthority> authorities = getUserAuthority(user.getRoles());
-            return buildUserForAuthentication(user, authorities);
+            //return buildUserForAuthentication(user, authorities);
+            return user;
         } else {
             throw new UsernameNotFoundException("username not found");
         }
     }
 
-    // Converti un role en GrantedAuthority
+    /*
+    // Converts user to spring.springframework.security.core.userdetails.User
+    private User buildUserForAuthentication(User user) {
+        return new User(user.getName(), user.getEmail(), user.getPassword(), user.getRoles());
+    }
+    */
+
+    // Converts role to GrantedAuthority
     private List<GrantedAuthority> getUserAuthority(Set<Role> userRoles) {
         Set<GrantedAuthority> roles = new HashSet<>();
         userRoles.forEach((role) -> {
@@ -68,10 +76,4 @@ public class CustomUserDetailsService implements UserDetailsService {
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>(roles);
         return grantedAuthorities;
     }
-
-    // Connexion à la BDD Mongo
-    private UserDetails buildUserForAuthentication(User user, List<GrantedAuthority> authorities) {
-        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), authorities);
-    }
-
 }

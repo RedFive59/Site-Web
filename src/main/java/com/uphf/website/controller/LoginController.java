@@ -65,7 +65,7 @@ public class LoginController {
         } else {
             userService.saveUser(user);
             modelAndView.addObject("successMessage", "L'utilisateur a bien été enregistré");
-            modelAndView.addObject("user", new User());
+            modelAndView.addObject("user", user);
             modelAndView.setViewName("login");
 
         }
@@ -78,20 +78,8 @@ public class LoginController {
         ModelAndView modelAndView = new ModelAndView();
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.findUserByEmail(auth.getName());
-        /*
-        modelAndView.addObject("currentUser", user);
-        modelAndView.addObject("name", "Bienvenue " + user.getName());
-        */
         modelAndView.addObject("message", "Il vous faut être connecté pour accéder à ceci");
         modelAndView.setViewName("dashboard");
-        return modelAndView;
-    }
-
-    // Modèle et vue pour charger la page d'accueil
-    @RequestMapping(value = {"/","/home"}, method = RequestMethod.GET)
-    public ModelAndView home() {
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.setViewName("home");
         return modelAndView;
     }
 

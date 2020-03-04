@@ -33,7 +33,6 @@ public class WebsiteApplication {
 			Role adminRole = roleRepository.findByRole("ADMIN");
 			if (adminRole == null) {
 				Role newAdminRole = new Role();
-				newAdminRole.setId(0);
 				newAdminRole.setRole("ADMIN");
 				roleRepository.save(newAdminRole);
 			}
@@ -41,7 +40,6 @@ public class WebsiteApplication {
 			Role userRole = roleRepository.findByRole("USER");
 			if (userRole == null) {
 				Role newUserRole = new Role();
-				newUserRole.setId(1);
 				newUserRole.setRole("USER");
 				roleRepository.save(newUserRole);
 			}
@@ -58,13 +56,13 @@ public class WebsiteApplication {
 				userRepository.save(newUser);
 			}
 
-			Set<Music> musicList = musicRepository.findByTitle("Physical");
-			if(musicList == null || musicList.isEmpty()) {
+			Music music = musicRepository.findByLink("5px6upUHM3fhOP621Edp4V");
+			if(music == null) {
 				Music newMusic = new Music();
 				newMusic.setTitle("Physical");
 				newMusic.setArtist("Dua Lipa");
 				newMusic.setDate(new Date());
-				newMusic.setLink("spotify:track:5px6upUHM3fhOP621Edp4V");
+				newMusic.setLink("5px6upUHM3fhOP621Edp4V");
 				newMusic.setUpvote(14);
 				newMusic.setDownvote(4);
 				User userTest = userRepository.findByName("userTest");

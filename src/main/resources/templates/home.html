@@ -1,34 +1,65 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{default}">
 <head>
     <title>ShareYourMusic</title>
 </head>
 <body>
 <div layout:fragment="content">
-    <!--
-    <h1>Bienvenue !</h1>
-
-    <p>Cliquez <a th:href="@{/login}">ici</a> pour vous connecter.</p>
-    -->
-    <table class="board">
-        <tr>
-            <td>Link</td>
-            <td>Id</td>
-            <td>Title</td>
-            <td>Artist</td>
-            <td>Posted by</td>
-            <td>Date</td>
-        </tr>
-        <tr>
-            <td>Link</td>
-            <td>Id</td>
-            <td>Title</td>
-            <td>Artist</td>
-            <td>Posted by</td>
-            <td>Date</td>
-        </tr>
-    </table>
+    <div th:switch="${musics}">
+        <h2 th:case="null">Il n'y a aucune musique pour l'instant.</h2>
+        <div th:case="*">
+            <h2>Musiques</h2>
+            <a type="button" href="/add-music" class="btn btn-primary" style="margin: 5px;">Ajout d'une musique</a>
+            <table class="board">
+                <tbody>
+                <tr th:each="music : ${musics}">
+                    <td><iframe th:src="@{'https://open.spotify.com/embed/track/' + ${music.link}}" width="400" height="250" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe></td>
+                    <td th:text="${music.title}"></td>
+                    <td th:text="${music.artist}"></td>
+                    <td th:text="${music.user}"></td>
+                    <td th:text="${music.date}"></td>
+                    <td sec:authorize="isAuthenticated()"><a th:href="@{/edit/{id}(id=${music.id})}">Editer</a></td>
+                    <td sec:authorize="isAuthenticated()"><a th:href="@{/delete/{id}(id=${music.id})}">Supprimer</a></td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
  </div>
+<script src="https://sdk.scdn.co/spotify-player.js"></script>
+<script>
+    window.onSpotifyWebPlaybackSDKReady = () => {
+        const token = 'BQBHgEu_aQv4hj9BrpsAgxECptBib1_9M2krOUU887o3e4M-pjtt3KxBZHeOEIUOtKR8WUUNJ_xxEswlYb4U_odHJeUQAqwMnsaAfCewdwPO41ZKMQkFGxjQi_4tUXaaoTBZhBse5-sidJZC8rTFcQNZQSonf0E3Uw';
+        const player = new Spotify.Player({
+        name: 'Web Playback SDK Quick Start Player',
+        getOAuthToken: cb => { cb(token); }
+        });
+
+        // Error handling
+        player.addListener('initialization_error', ({ message }) => { console.error(message); });
+        player.addListener('authentication_error', ({ message }) => { console.error(message); });
+        player.addListener('account_error', ({ message }) => { console.error(message); });
+        player.addListener('playback_error', ({ message }) => { console.error(message); });
+
+        // Playback status updates
+        player.addListener('player_state_changed', state => { console.log(state); });
+
+        // Ready
+        player.addListener('ready', ({ device_id }) => {
+        console.log('Ready with Device ID', device_id);
+        });
+
+        // Not Ready
+        player.addListener('not_ready', ({ device_id }) => {
+        console.log('Device ID has gone offline', device_id);
+        });
+
+        // Connect to the player!
+        player.connect();
+    };
+ </script>
  </body>
  </html>

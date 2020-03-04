@@ -2,13 +2,14 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{default}">
 <head>
-    <title>Identification</title>
+    <title>Identification | ShareYourMusic</title>
 </head>
 <body class="text-center">
 <div layout:fragment="content">
     <form class="form-signin" th:action="@{/login}" method="post">
         <i class="fas fa-user mb-4" style="font-size:64px"></i>
         <h1 class="h3 mb-3 font-weight-normal">Connexion à votre compte</h1>
+        <div th:text="${successMessage}"></div>
         <div th:if="${param.error}">
             Email et mot de passe invalide.
         </div>
