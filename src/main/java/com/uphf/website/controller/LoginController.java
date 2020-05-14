@@ -47,7 +47,7 @@ public class LoginController {
         ModelAndView modelAndView = new ModelAndView();
         User user = new User();
         modelAndView.addObject("user", user);
-        modelAndView.setViewName("login");
+        modelAndView.setViewName("signup");
         return modelAndView;
     }
 

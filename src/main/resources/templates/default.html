@@ -66,16 +66,16 @@
 
     function initLangParam() {
         var url = new URL(window.location);
-        //console.log(url.searchParams.get('lang'));
+
         if(url.searchParams.get('lang') == null){
             if(localStorage.getItem("langVar") == null){
                 var country = $("#country").countrySelect("getSelectedCountryData");
-                localStorage.setItem("langVar", country);
-                url.searchParams.set('lang', country.iso2);
-            } else {
-                url.searchParams.set('lang', localStorage.getItem("langVar"));
+                localStorage.setItem("langVar", country.iso2);
             }
-            window.location = url;
+            if(localStorage.getItem("langVar") != null) {
+                url.searchParams.set('lang', localStorage.getItem("langVar"));
+                window.location = url;
+            }
         } else {
             $("#country").countrySelect("selectCountry", url.searchParams.get('lang'));
         }
@@ -86,7 +86,7 @@
         var country = $("#country").countrySelect("getSelectedCountryData");
         if(url.searchParams.get('lang') != null)
             url.searchParams.delete('lang');
-        if(url.searchParams.get('lang') != localStorage.getItem("langVar")){
+        if(localStorage.getItem("langVar") != null && url.searchParams.get('lang') != localStorage.getItem("langVar")){
             url.searchParams.set('lang', country.iso2);
             localStorage.setItem("langVar", country.iso2);
             window.location = url;
