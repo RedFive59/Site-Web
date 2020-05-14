@@ -2,28 +2,31 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{default}">
 <head>
-    <title>Identification | ShareYourMusic</title>
+    <title th:text="#{title.login}">Login</title>
 </head>
 <body class="text-center">
 <div layout:fragment="content">
     <form class="form-signin" th:action="@{/login}" method="post">
         <i class="fas fa-user mb-4" style="font-size:64px"></i>
-        <h1 class="h3 mb-3 font-weight-normal">Connexion à votre compte</h1>
+        <h1 class="h3 mb-3 font-weight-normal" th:text="#{login.connectMessage}">Signin</h1>
         <div th:text="${successMessage}"></div>
-        <div th:if="${param.error}">
-            Email et mot de passe invalide.
+        <div th:if="${param.error}" th:text="#{login.invalidAccess}">
+            Invalid mail or pass
         </div>
-        <div th:if="${param.logout}">
-            Vous avez été déconnecté.
+        <div th:if="${param.logout}" th:text="#{login.disconnected}">
+            You have been disconnected
         </div>
-        <label for="inputEmail" class="sr-only">Adresse mail</label>
-        <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email" required=""/>
-        <label for="inputPassword" class="sr-only">Mot de passe</label>
-        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Mot de passe" required=""/>
-        <button class="btn btn-lg btn-primary btn-block" type="submit">Se connecter</button>
+        <label for="inputEmail" class="sr-only" th:text="#{label.user.email}">Mail</label>
+        <input type="email" name="email" id="inputEmail" class="form-control" th:placeholder="#{label.user.email}" required autocomplete="email">
+        <label for="inputPassword" class="sr-only" th:text="#{label.user.password}">Password</label>
+        <input type="password" name="password" id="inputPassword" class="form-control" th:placeholder="#{label.user.password}" required autocomplete="password">
+        <!--
+        <a type="button" class="btn btn-outline-info btn-sm" style="margin-bottom:10px;" href="/forgotpassword" th:text="#{label.form.forgotPassword}">Forgot Password ?</a>
+        -->
+        <button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{label.form.signin}">Signin</button>
     </form>
     <form class="form-signin" th:action="@{/signup}" method="get">
-        <button class="btn btn-md btn-success btn-block" type="Submit" value="submit">S'enregistrer</button>
+        <button class="btn btn-md btn-success btn-block" type="Submit" value="submit" th:text="#{label.form.signup}">Signup</button>
     </form>
 </div>
 </body>

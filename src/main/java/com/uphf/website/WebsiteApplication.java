@@ -13,7 +13,6 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.Date;
 import java.util.Arrays;
 import java.util.HashSet;
-import java.util.Set;
 
 @SpringBootApplication
 public class WebsiteApplication {
@@ -25,11 +24,15 @@ public class WebsiteApplication {
 	@Autowired
 	private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+	/** Création des différents objets dans la base de données si il n'existe pas déjà */
 	@Bean
 	CommandLineRunner init(RoleRepository roleRepository, UserRepository userRepository, GroupRepository groupRepository, MusicRepository musicRepository) {
 
 		return args -> {
 
+			/**
+			 * Création des rôles ADMIN et USER
+			 */
 			Role adminRole = roleRepository.findByRole("ADMIN");
 			if (adminRole == null) {
 				Role newAdminRole = new Role();
@@ -44,6 +47,9 @@ public class WebsiteApplication {
 				roleRepository.save(newUserRole);
 			}
 
+			/**
+			 * Création de l'utilisateur userTest
+			 */
 			User user = userRepository.findByName("userTest");
 			if(user == null) {
 				User newUser = new User();
@@ -56,12 +62,15 @@ public class WebsiteApplication {
 				userRepository.save(newUser);
 			}
 
+			/**
+			 * Ajout d'une musique posté par UserTest
+			 */
 			Music music = musicRepository.findByLink("5px6upUHM3fhOP621Edp4V");
 			if(music == null) {
 				Music newMusic = new Music();
 				newMusic.setTitle("Physical");
 				newMusic.setArtist("Dua Lipa");
-				newMusic.setDate(new Date());
+				newMusic.setPostingdate(new Date());
 				newMusic.setLink("5px6upUHM3fhOP621Edp4V");
 				newMusic.setUpvote(14);
 				newMusic.setDownvote(4);
@@ -70,6 +79,11 @@ public class WebsiteApplication {
 				musicRepository.save(newMusic);
 			}
 
+			/**
+			 * Ajout d'un groupe dans lequel UserTest est présent
+			 *
+			 * Inutilisé
+			 */
 			Group group = groupRepository.findByName("groupTest");
 			if(group == null) {
 				Group newGroup = new Group();

@@ -1,0 +1,1 @@
+gradlew :bootRun --warning-mode all --stacktrace

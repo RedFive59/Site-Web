@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{default}">
+<head>
+    <title th:text="#{title.showmusic}">Show Music</title>
+</head>
+<body>
+<div layout:fragment="content">
+    <div th:switch="${music}">
+        <h2 th:case="null" th:text="#{musics.notexist}">No music</h2>
+        <div th:case="*">
+            <a type="button" href="/musics" class="btn btn-primary" style="margin: 5px;" th:text="#{musics.goback}">Go back</a>
+            <h3><nobr th:text="#{musics.postedby}">Music posted by</nobr> <nobr th:text="${music.user}"></nobr> [<nobr th:text="${#dates.format(music.postingdate,'MM/dd/yyyy HH:mm')}"></nobr>]</h3>
+            <table class="board">
+                <thead>
+                <tr>
+                    <th th:text="#{musics.spotifyplayer}" width="400" >Spotify player</th>
+                    <th th:text="#{musics.description}">Description</th>
+                    <th th:text="#{musics.options}" width="120">Options</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td><iframe th:src="@{'https://open.spotify.com/embed/track/' + ${music.link}}" width="400" height="250" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe></td>
+                    <td th:text="${music.description}"></td>
+                    <td sec:authorize="isAuthenticated()">
+                        <div>
+                            <a type="button" class="btn btn-outline-info btn-squared" th:if="${#authentication.getPrincipal().getId() == music.user.id}" th:href="@{/edit/{id}(id=${music.id})}" >
+                                <i class="far fa-edit"></i> <nobr th:text="#{musics.edit}">Edit</nobr>
+                            </a>
+                        </div>
+                        <div>
+                            <a type="button" class="btn btn-outline-info btn-squared" th:if="${#authentication.getPrincipal().getId() == music.user.id}" th:href="@{/delete/{id}(id=${music.id})}" >
+                                <i class="far fa-trash-alt"></i> <nobr th:text="#{musics.delete}">Delete</nobr>
+                            </a>
+                        </div>
+                        <div>
+                            <a type="button" class="btn btn-outline-info btn-squared" th:href="@{/show/{id}(id=${music.id})}">
+                                <i class="fas fa-share-alt"></i> <nobr th:text="#{musics.share}">Share</nobr>
+                            </a>
+                        </div>
+                    </td>
+                    <td sec:authorize="isAnonymous()">
+                        <button type="button" class="btn btn-outline-info btn-squared" th:href="@{/show/{id}(id=${music.id})}">
+                            <i class="fas fa-share-alt"></i> <nobr th:text="#{musics.share}">Share</nobr>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

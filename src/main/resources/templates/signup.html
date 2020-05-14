@@ -2,29 +2,29 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{default}">
 <head>
-    <title>S'enregistrer | ShareYourMusic</title>
+    <title th:text="#{title.signup}">Sign up</title>
 </head>
 <body class="text-center">
 <div layout:fragment="content">
     <form class="form-signin" th:action="@{/signup}" method="post" autocomplete="on">
         <i class="fas fa-user-plus mb-4" style="font-size:64px"></i>
-        <h1 class="h3 mb-3 font-weight-normal">Création d'un compte</h1>
-        <div th:if="${param.error}">
-            Email et mot de passe invalide.
+        <h1 class="h3 mb-3 font-weight-normal" th:text="#{login.createAccount}">Création d'un compte</h1>
+        <div th:if="${param.error}" th:text="#{login.invalidAccess}">
+            Invalid mail or pass
         </div>
-        <div th:if="${param.logout}">
-            Vous avez été déconnecté.
+        <div th:if="${param.logout}" th:text="#{login.disconnected}">
+            You have been disconnected
         </div>
-        <label for="inputEmail" class="sr-only">Email</label>
-        <input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email" required="" />
-        <label for="inputPassword" class="sr-only">Mot de passe</label>
-        <input type="password" name="password" id="inputPassword" class="form-control" placeholder="Mot de passe" required="" />
-        <label for="inputName" class="sr-only">Nom d'utilisateur</label>
-        <input type="text" name="name" id="inputName" class="form-control" placeholder="Nom d'utilisateur" required="" />
-        <button class="btn btn-lg btn-primary btn-block" type="submit">S'enregistrer</button>
+        <label for="inputEmail" class="sr-only" th:text="#{label.user.email}">Email</label>
+        <input type="email" name="email" id="inputEmail" class="form-control" th:placeholder="#{label.user.email}" required autocomplete="username email">
+        <label for="inputPassword" class="sr-only" th:text="#{label.user.password}">Password</label>
+        <input type="password" name="password" id="inputPassword" class="form-control" th:placeholder="#{label.user.password}" required autocomplete="new-password">
+        <label for="inputName" class="sr-only" th:text="#{label.user.username}">Username</label>
+        <input type="text" name="name" id="inputName" class="form-control" th:placeholder="#{label.user.username}" required autocomplete="name">
+        <button class="btn btn-lg btn-primary btn-block" type="submit" th:text="#{label.form.signup}">Signup</button>
     </form>
     <form class="form-signin" th:action="@{/login}" method="get">
-        <button class="btn btn-md btn-success btn-block" type="Submit">Se connecter</button>
+        <button class="btn btn-md btn-success btn-block" type="Submit" th:text="#{label.form.signin}">Signin</button>
     </form>
 </div>
 </body>

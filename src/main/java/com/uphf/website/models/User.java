@@ -9,6 +9,25 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+/**
+ * Entité de l'utilisateur
+ *
+ * Elle hérite d'UserDetails qui est un objet issu de SpringSecurity
+ * Cette implémentation permet de gérer les variables
+ * enabled, accountNonExpired, accountNonLocked, credentialsNonExpired et authorities
+ *
+ * Ainsi nous pouvons nous connecter avec cette objet
+ *
+ * @id ID de l'utilisateur
+ * @email Email de l'utilisateur
+ * @password Mot de passe de l'utilisateur
+ * @name Nom de l'utilisateur
+ * @enabled Actif ou non
+ * @accountNonExpired Accès temporaire
+ * @accountNonLocked Verrouillage d'accès
+ * @credentialsNonExpired Informations de connexion temporaire
+ * @authorities Autorité de l'utilisateur
+ */
 @Document(collection = "user")
 public class User implements UserDetails {
 
@@ -17,8 +36,6 @@ public class User implements UserDetails {
     private String email;
     private String password;
     private String name;
-    private String description;
-    private String spotifyToken;
     private boolean enabled;
     private boolean accountNonExpired;
     private boolean accountNonLocked;
@@ -33,8 +50,6 @@ public class User implements UserDetails {
         this.email = "undefined";
         this.password = "undefined";
         this.name = "undefined";
-        this.description = "undefined";
-        this.spotifyToken = "undefined";
         this.enabled = false;
         this.accountNonExpired = true;
         this.accountNonLocked = true;
@@ -48,8 +63,6 @@ public class User implements UserDetails {
         this.email = email;
         this.password = password;
         this.name = name;
-        this.description = "undefined";
-        this.spotifyToken = "undefined";
         this.enabled = true;
         this.accountNonExpired = true;
         this.accountNonLocked = true;
@@ -61,12 +74,11 @@ public class User implements UserDetails {
         this.musics = new HashSet<>();
     }
 
-    public User(String name, String email, String password, Set<Role> userRoles){
+    public User(String id, String name, String email, String password, Set<Role> userRoles){
+        this.id = id;
         this.email = email;
         this.password = password;
         this.name = name;
-        this.description = "undefined";
-        this.spotifyToken = "undefined";
         this.enabled = true;
         this.accountNonExpired = true;
         this.accountNonLocked = true;
@@ -137,14 +149,6 @@ public class User implements UserDetails {
         this.name = name;
     }
 
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
     public boolean isEnabled() {
         return enabled;
     }
@@ -152,15 +156,6 @@ public class User implements UserDetails {
     public void setEnabled(boolean enabled) {
         this.enabled = enabled;
     }
-
-    public String getSpotifyToken() {
-        return spotifyToken;
-    }
-
-    public void setSpotifyToken(String spotifyToken) {
-        this.spotifyToken = spotifyToken;
-    }
-
 
     public Set<Role> getRoles() {
         return roles;

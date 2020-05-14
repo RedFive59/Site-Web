@@ -6,52 +6,95 @@
 <head>
     <title layout:title-pattern="$CONTENT_TITLE - $LAYOUT_TITLE">ShareYourMusic</title>
     <meta name="description" content=""/>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous" />
-    <link rel="stylesheet" href="/css/shards.min.css">
-    <link rel="stylesheet" href="/css/style.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/shards-ui@latest/dist/css/shards.min.css">
+    <link rel="stylesheet" th:href="@{/css/countrySelect.min.css}">
+    <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
-<div class="header">
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
-        <a class="navbar-brand" href="/">ShareYourMusic</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="/">
-                        <i class="fas fa-home"></i> Accueil <span class="sr-only">(current)</span>
-                    </a>
-                </li>
-            </ul>
-            <ul class="navbar-nav ml-auto">
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <a class="nav-link" href="/dashboard">
-                        <i class="fas fa-user-circle"></i> Compte
-                    </a>
-                </li>
-                <li class="nav-item" sec:authorize="isAnonymous()"><a class="nav-link" th:href="@{/login}">Se connecter</a></li>
-                <li class="nav-item" sec:authorize="isAuthenticated()">
-                    <!-- <a class="nav-link" th:text="${name}"></a> -->
-                    <form th:action="@{/logout}" method="post">
-                        <input type="submit" style="margin-top: 5px;" value="Se déconnecter"/>
-                    </form>
-                </li>
-            </ul>
-        </div>
-    </nav>
-</div>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="/" th:text="#{website.name}">ShareYourMusic</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link" href="/">
+                    <i class="fas fa-home"></i> <nobr th:text="#{navbar.home}">Home</nobr> <span class="sr-only">(current)</span>
+                </a>
+            </li>
+        </ul>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item" sec:authorize="isAuthenticated()">
+                <a class="nav-link" href="/dashboard"><i class="fas fa-user-circle"></i> <nobr th:text="#{navbar.account}">Account</nobr></a>
+            </li>
+            <li class="nav-item" style="padding: .625rem 1.125rem;" sec:authorize="isAnonymous()">
+                <a id="login" class="nav-link btn btn-outline-primary" th:href="@{/login}" th:text="#{navbar.login}">Log in</a>
+            </li>
+            <li class="nav-item" style="padding: .625rem 1.125rem;" sec:authorize="isAuthenticated()">
+                <form th:action="@{/logout}" method="post">
+                    <input type="submit" class="btn btn-outline-primary" th:value="#{navbar.disconnect}"/>
+                </form>
+            </li>
+            <li class="nav-item" style="padding: 1.25rem 2.25rem; display: block;">
+                <input type="text" id="country" onchange="updateLangParam()"/>
+                <input type="hidden" id="country_code" />
+            </li>
+        </ul>
+    </div>
+</nav>
 
-<div class="container">
-    <div layout:fragment="content"></div>
-</div>
-<!-- /.container -->
+<main role="main" class="container">
+    <div class ="jumbotron" layout:fragment="content"></div>
+</main>
 
-<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://unpkg.com/@popperjs/core@2"></script>
 <script src="https://kit.fontawesome.com/5c801e6c27.js" crossorigin="anonymous"></script>
-<script src="js/shards.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+<script src="https://unpkg.com/shards-ui@latest/dist/js/shards.min.js"></script>
+<script src="https://unpkg.com/feather-icons"></script>
+<script th:src="@{/js/countrySelect.min.js}"></script>
+<script>
+    feather.replace();
+
+    $("#country").countrySelect({
+        onlyCountries: ['us', 'fr'],
+        responsiveDropdown: true
+    });
+
+    function initLangParam() {
+        var url = new URL(window.location);
+        //console.log(url.searchParams.get('lang'));
+        if(url.searchParams.get('lang') == null){
+            if(localStorage.getItem("langVar") == null){
+                var country = $("#country").countrySelect("getSelectedCountryData");
+                localStorage.setItem("langVar", country);
+                url.searchParams.set('lang', country.iso2);
+            } else {
+                url.searchParams.set('lang', localStorage.getItem("langVar"));
+            }
+            window.location = url;
+        } else {
+            $("#country").countrySelect("selectCountry", url.searchParams.get('lang'));
+        }
+    }
+
+    function updateLangParam() {
+        var url = new URL(window.location);
+        var country = $("#country").countrySelect("getSelectedCountryData");
+        if(url.searchParams.get('lang') != null)
+            url.searchParams.delete('lang');
+        if(url.searchParams.get('lang') != localStorage.getItem("langVar")){
+            url.searchParams.set('lang', country.iso2);
+            localStorage.setItem("langVar", country.iso2);
+            window.location = url;
+        }
+    }
+
+    initLangParam();
+</script>
+
 </body>
 </html>

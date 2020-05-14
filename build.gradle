@@ -5,7 +5,7 @@ plugins {
 }
 
 group = 'com.uphf'
-version = '0.0.1-SNAPSHOT'
+version = '1.0.0-SNAPSHOT'
 sourceCompatibility = '1.8'
 
 repositories {
@@ -13,14 +13,25 @@ repositories {
 }
 
 dependencies {
-	compile 'se.michaelthelin.spotify:spotify-web-api-java:4.2.1'
-	compile 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
-	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
-	implementation 'org.springframework.boot:spring-boot-starter-security'
-	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
-	implementation 'org.springframework.boot:spring-boot-devtools'
-	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+	/** Spring Web */
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	/** Spring + MongoDB */
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb-reactive'
+	/** Spring Security */
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	/** Spring + Thymeleaf */
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+	/** Thymeleaf Security */
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity5'
+	/** Thymeleaf dialect (Layout) */
+	implementation 'nz.net.ultraq.thymeleaf:thymeleaf-layout-dialect'
+	/** Hot swapping, disable cache for template, enable live reload */
+	implementation 'org.springframework.boot:spring-boot-devtools'
+
+	/** Spotify API */
+	implementation 'se.michaelthelin.spotify:spotify-web-api-java:4.2.1'
+
+	/** Tests before executing rest of the app */
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
@@ -28,6 +39,7 @@ dependencies {
 	testImplementation 'org.springframework.security:spring-security-test'
 }
 
+/** Use of Jitpack for Spotify API */
 allprojects {
 	repositories {
 		maven { url 'https://jitpack.io' }

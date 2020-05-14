@@ -1,33 +1,28 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{default}">
 <head>
-    <title>Edition de la musique | ShareYourMusic</title>
+    <title th:text="#{title.updatemusic}">Update Music</title>
 </head>
 <body>
 <div layout:fragment="content">
     <form class="musicform"
-          action="#"
           th:action="@{/update/{id}(id=${music.id})}"
           th:object="${music}"
           method="post" autocomplete="off">
         <div class="row">
-            <label for="link">Lien</label>
-            <input type="text" th:field="*{link}" id="link" placeholder="Lien">
-            <span th:if="${#fields.hasErrors('link')}" th:errors="*{link}"></span>
+            <label for="link"><i class="fas fa-external-link-square-alt"></i> <nobr th:text="#{musics.link}" >Link</nobr></label>
+            <input type="text" th:field="*{link}" id="link" th:placeholder="#{musics.link}" disabled>
+            <span class="alert alert-danger" th:if="${#fields.hasErrors('link')}" th:errors="*{link}"></span>
         </div>
         <div class="row">
-            <label for="artist">Artiste</label>
-            <input type="text" th:field="*{artist}" id="artist" placeholder="Artiste">
-            <span th:if="${#fields.hasErrors('artist')}" th:errors="*{artist}"></span>
-        </div>
-        <div class="row">
-            <label for="title">Titre</label>
-            <input type="text" th:field="*{title}" id="title" placeholder="Titre">
-            <span th:if="${#fields.hasErrors('title')}" th:errors="*{title}"></span>
+            <label for="description"><i class="fas fa-comment-medical"></i> <nobr th:text="#{musics.description}">Description</nobr></label>
+            <input type="text" th:field="*{description}" id="description" th:placeholder="#{musics.description}">
+            <span th:if="${#fields.hasErrors('description')}" th:errors="*{description}"></span>
         </div>
         <div class="submit">
-            <input type="submit" value="Mettre à jour la musique">
+            <input type="submit" class="btn btn-outline-dark" th:value="#{musics.updatemusic}">
         </div>
     </form>
 </div>

@@ -4,62 +4,171 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{default}">
 <head>
-    <title>ShareYourMusic</title>
+    <title th:text="#{title.home}">Accueil</title>
 </head>
 <body>
 <div layout:fragment="content">
     <div th:switch="${musics}">
-        <h2 th:case="null">Il n'y a aucune musique pour l'instant.</h2>
+        <h2 th:case="null" th:text="#{musics.empty}">No music</h2>
         <div th:case="*">
-            <h2>Musiques</h2>
-            <a type="button" href="/add-music" class="btn btn-primary" style="margin: 5px;">Ajout d'une musique</a>
+            <h2 th:text="#{musics.musics}">Musics</h2>
+            <div sec:authorize="isAuthenticated()" style="margin: 1rem; text-align:center;" >
+                <a type="button" href="/add-music" class="btn btn-primary" th:text="#{musics.addmusic}">Add music</a>
+            </div>
             <table class="board">
+                <thead>
+                <tr>
+                    <th th:text="#{musics.votes}" width="150">Votes</th>
+                    <th th:text="#{musics.spotifyplayer}" width="400">Spotify player</th>
+                    <th th:text="#{musics.description}">Description</th>
+                    <th th:text="#{musics.postedby}">Posted by</th>
+                    <th th:text="#{musics.date}">Date</th>
+                    <th th:text="#{musics.options}" width="150">Options</th>
+                </tr>
+                </thead>
                 <tbody>
                 <tr th:each="music : ${musics}">
+                    <td>
+                        <div id="cannotVote" th:if="${music.hasVoted(user)}">
+                            <div style="margin-bottom: 0.2rem;">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <button class="input-group-text btn-secondary" id="basic-addon3" disabled><i class="far fa-arrow-alt-circle-up"></i></button>
+                                    </div>
+                                    <input type="text" class="form-control" aria-describedby="basic-addon3" readonly th:value="${music.upvote}">
+                                </div>
+                            </div>
+                            <div style="margin-bottom: 0.2rem;" th:if="${user != null}">
+                                <form th:action="@{/removevote(id=${music.id},page=${#httpServletRequest.getParameter('page')})}"
+                                      th:object="${music}"
+                                      method="post" autocomplete="off">
+                                    <button class="input-group-text btn-danger btn-squared" type="submit"><i class="far fa-times-circle"></i></button>
+                                </form>
+                            </div>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <div class="input-group-prepend">
+                                        <button class="input-group-text btn-secondary" id="basic-addon4" disabled><i class="far fa-arrow-alt-circle-down"></i></button>
+                                    </div>
+                                    <input type="text" class="form-control" aria-describedby="basic-addon4" readonly th:value="${music.downvote}">
+                                </div>
+                            </div>
+                        </div>
+                        <div id="canVote" th:unless="${music.hasVoted(user)}">
+                            <form th:action="@{/upvote(id=${music.id},page=${#httpServletRequest.getParameter('page')})}"
+                                  th:object="${music}"
+                                  method="post" autocomplete="off">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <button class="input-group-text btn-success" id="basic-addon1" type="submit"><i class="far fa-arrow-alt-circle-up"></i></button>
+                                        </div>
+                                        <input type="text" class="form-control" aria-describedby="basic-addon1" readonly th:value="${music.upvote}">
+                                    </div>
+                                </div>
+                            </form>
+                            <form th:action="@{/downvote(id=${music.id},page=${#httpServletRequest.getParameter('page')})}"
+                                  th:object="${music}"
+                                  method="post" autocomplete="off">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <div class="input-group-prepend">
+                                            <button class="input-group-text btn-danger" id="basic-addon2" type="submit"><i class="far fa-arrow-alt-circle-down"></i></button>
+                                        </div>
+                                        <input type="text" class="form-control" aria-describedby="basic-addon2" readonly th:value="${music.downvote}">
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </td>
                     <td><iframe th:src="@{'https://open.spotify.com/embed/track/' + ${music.link}}" width="400" height="250" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe></td>
-                    <td th:text="${music.title}"></td>
-                    <td th:text="${music.artist}"></td>
+                    <td th:text="${music.description}"></td>
                     <td th:text="${music.user}"></td>
-                    <td th:text="${#dates.format(music.date,'MM/dd/yyyy HH:mm')}"></td>
-                    <td sec:authorize="isAuthenticated()" th:if="${#authentication.getPrincipal().getId() == music.user.id}"><a th:href="@{/edit/{id}(id=${music.id})}">Editer</a></td>
-                    <td sec:authorize="isAuthenticated()" th:if="${#authentication.getPrincipal().getId() == music.user.id}"><a th:href="@{/delete/{id}(id=${music.id})}">Supprimer</a></td>
+                    <td th:text="${#dates.format(music.postingdate,'MM/dd/yyyy HH:mm')}"></td>
+                    <td sec:authorize="isAuthenticated()">
+                        <div th:if="${#authentication.getPrincipal().getId() == music.user.id}">
+                            <a type="button" class="btn btn-outline-info btn-squared" th:href="@{/edit/{id}(id=${music.id})}" >
+                                <i class="far fa-edit"></i> <nobr th:text="#{musics.edit}">Edit</nobr>
+                            </a>
+                        </div>
+                        <div th:if="${#authentication.getPrincipal().getId() == music.user.id}">
+                            <a type="button" class="btn btn-outline-info btn-squared" th:if="${#authentication.getPrincipal().getId() == music.user.id}" th:href="@{/delete/{id}(id=${music.id})}" >
+                                <i class="far fa-trash-alt"></i> <nobr th:text="#{musics.delete}">Delete</nobr>
+                            </a>
+                        </div>
+                        <div>
+                            <a type="button" class="btn btn-outline-info btn-squared" th:href="@{/show/{id}(id=${music.id})}" target="_blank">
+                                <i class="fas fa-share-alt"></i> <nobr th:text="#{musics.share}">Share</nobr>
+                            </a>
+                        </div>
+                    </td>
+                    <td sec:authorize="isAnonymous()">
+                        <button type="button" class="btn btn-outline-info btn-squared" th:href="@{/show/{id}(id=${music.id})}">
+                            <i class="fas fa-share-alt"></i> <nobr th:text="#{musics.share}">Share</nobr>
+                        </button>
+                    </td>
                 </tr>
                 </tbody>
             </table>
         </div>
     </div>
- </div>
-<script src="https://sdk.scdn.co/spotify-player.js"></script>
+    <div th:if="${musics}">
+    <nav aria-label="Pagination" th:if="${musics.totalPages gt 0}">
+        <ul class="pagination justify-content-center font-weight-medium">
+            <li class="page-item" th:classappend="${musics.number eq 0} ? 'disabled'">
+                <a class="page-link svg-icon"
+                   th:href="@{/musics?page={id}(id=${musics.number lt 2 ? 1 : musics.number})}"
+                   th:aria-label="#{pagination.previous}"
+                   th:title="#{pagination.previoustitle}" rel="tooltip">
+                    <span aria-hidden="true" data-feather="chevrons-left" width="20" height="20"></span>
+                </a>
+            </li>
+            <li class="page-item" th:classappend="${i eq musics.number + 1} ? 'active'"
+                th:each="i : ${#numbers.sequence( 1, musics.totalPages, 1)}">
+                <a class="page-link" th:href="@{/musics?page={id}(id=${i})}" th:text="${i}"
+                   th:title="${'Page '+ i}" data-toggle="tooltip"></a>
+            </li>
+            <li class="page-item" th:classappend="${musics.number + 1 eq musics.totalPages} ? 'disabled'">
+                <a class="page-link svg-icon" th:href="@{/musics?page={id}(id=${musics.number + 2})}"
+                   th:aria-label="#{pagination.next}"
+                   th:title="#{pagination.nexttitle}" rel="tooltip">
+                    <span aria-hidden="true" data-feather="chevrons-right" width="20" height="20"></span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+    </div>
+</div>
+<script th:src="@{/js/spotify-player.js}"></script>
 <script>
     window.onSpotifyWebPlaybackSDKReady = () => {
-        const token = 'BQBHgEu_aQv4hj9BrpsAgxECptBib1_9M2krOUU887o3e4M-pjtt3KxBZHeOEIUOtKR8WUUNJ_xxEswlYb4U_odHJeUQAqwMnsaAfCewdwPO41ZKMQkFGxjQi_4tUXaaoTBZhBse5-sidJZC8rTFcQNZQSonf0E3Uw';
-        const player = new Spotify.Player({
-        name: 'Web Playback SDK Quick Start Player',
-        getOAuthToken: cb => { cb(token); }
-        });
+    const token = 'BQC9FNp70UIB0HSO6tO0XmE_yjCOBRfYYucsrEIL0LFXiUP8ZaJHN5n9N768FVtugUyAqlB7iCRRhihO10NHmRTxlD2bkPxMUM2k3gocqJ-wKMju8kTY7WGVK14LG7kVT9V7Sx05gAk5-ubzJ651a0Z3IKuj5Orz1w';
+    const player = new Spotify.Player({
+    name: 'Web Playback SDK Quick Start Player',
+    getOAuthToken: cb => { cb(token); }
+    });
 
-        // Error handling
-        player.addListener('initialization_error', ({ message }) => { console.error(message); });
-        player.addListener('authentication_error', ({ message }) => { console.error(message); });
-        player.addListener('account_error', ({ message }) => { console.error(message); });
-        player.addListener('playback_error', ({ message }) => { console.error(message); });
+    // Error handling
+    player.addListener('initialization_error', ({ message }) => { console.error(message); });
+    player.addListener('authentication_error', ({ message }) => { console.error(message); });
+    player.addListener('account_error', ({ message }) => { console.error(message); });
+    player.addListener('playback_error', ({ message }) => { console.error(message); });
 
-        // Playback status updates
-        player.addListener('player_state_changed', state => { console.log(state); });
+    // Playback status updates
+    player.addListener('player_state_changed', state => { console.log(state); });
 
-        // Ready
-        player.addListener('ready', ({ device_id }) => {
-        console.log('Ready with Device ID', device_id);
-        });
+    // Ready
+    player.addListener('ready', ({ device_id }) => {
+    console.log('Ready with Device ID', device_id);
+    });
 
-        // Not Ready
-        player.addListener('not_ready', ({ device_id }) => {
-        console.log('Device ID has gone offline', device_id);
-        });
+    // Not Ready
+    player.addListener('not_ready', ({ device_id }) => {
+    console.log('Device ID has gone offline', device_id);
+    });
 
-        // Connect to the player!
-        player.connect();
-    };
- </script>
- </body>
- </html>
+    // Connect to the player!
+    player.connect();
+</script>
+</body>
+</html>

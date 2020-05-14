@@ -18,11 +18,11 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableWebSecurity
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
+    // Référence à l'encodeur de mot de passe
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
-    CustomizeAuthenticationSuccessHandler customizeAuthenticationSuccessHandler;
+    // Référence au CustomAuthenticationSuccessHandler (Redirection selon les rôles)
 
     @Bean
     public UserDetailsService mongoUserDetails() {
@@ -44,14 +44,18 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.authorizeRequests()
                 .antMatchers("/").permitAll()
+                .antMatchers("/index").permitAll()
+                .antMatchers("/musics").permitAll()
+                .antMatchers("/show/**").permitAll()
                 .antMatchers("/login").permitAll()
                 .antMatchers("/signup").permitAll()
+                .antMatchers("/forgotpassword").permitAll()
                 .antMatchers("/dashboard/**").authenticated()
+                .antMatchers("/admin/").hasAuthority("ADMIN")
                 .anyRequest()
                     .authenticated()
                 .and()
                     .formLogin()
-                    .successHandler((AuthenticationSuccessHandler) customizeAuthenticationSuccessHandler)
                     .loginPage("/login")
                     .defaultSuccessUrl("/")
                     .failureUrl("/login?error=true")
@@ -75,6 +79,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     public void configure(WebSecurity web) throws Exception {
         web
                 .ignoring()
-                .antMatchers("/resources/**", "/static/**", "/css/**", "/js/**", "/images/**");
+                .antMatchers("/static/**", "/css/**", "/img/**", "/js/**", "/sprites/**", "/webfonts/**", "/error");
     }
 }

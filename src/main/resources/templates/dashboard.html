@@ -3,14 +3,94 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{default}">
 <head>
-    <title>Tableau de bord | ShareYourMusic</title>
+    <title th:text="#{title.dashboard}">Dashboard</title>
 </head>
 <body>
 <div layout:fragment="content">
-    <h1 th:inline="text">Bonjour [[${#httpServletRequest.remoteUser}]]!</h1>
-    <h2>Tableau de bord</h2>
+    <h1 th:inline="text"><nobr th:text="#{board.hello}">Hello</nobr> [[${#httpServletRequest.remoteUser}]]!</h1>
+    <h2 th:text="#{board.dashboard}">Dashboard</h2>
     <div sec:authorize="isAuthenticated()">
-        Authentifié sous le nom de <span sec:authentication="name">NomDefaut</span> avec comme rôle : <span sec:authentication="principal.authorities">[ROLE_USER, ROLE_ADMIN]</span>
+        <nobr th:text="#{board.authAs}">Auth as</nobr> <span sec:authentication="name">NomDefaut</span> <nobr th:text="#{board.roles}">with roles :</nobr> <span sec:authentication="principal.authorities">[ROLE_USER, ROLE_ADMIN]</span>
+        <br><hr><br>
+        <div th:switch="${musics}">
+            <h2 th:case="null" th:text="#{musics.nomusicposted}">No post</h2>
+            <div th:case="*">
+                <h3><nobr th:text="#{musics.allmusics}">All your musics</nobr></h3>
+                <table class="board">
+                    <thead>
+                    <tr>
+                        <th th:text="#{musics.spotifylink}">Spotify link</th>
+                        <th th:text="#{musics.title}">Title</th>
+                        <th th:text="#{musics.artist}">Artist</th>
+                        <th th:text="#{musics.description}">Description</th>
+                        <th th:text="#{musics.options}" width="150">Options</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="music : ${musics}">
+                        <td>
+                            <a class="btn btn-success btn-pill" th:href="@{'https://open.spotify.com/track/' + ${music.link}}" target="_blank">
+                                <i class="fas fa-external-link-alt"></i> <nobr th:text="#{musics.link}"></nobr>
+                            </a>
+                        </td>
+                        <td th:text="${music.title}"></td>
+                        <td th:text="${music.artist}"></td>
+                        <td th:text="${music.description}"></td>
+                        <td sec:authorize="isAuthenticated()">
+                            <div>
+                                <a type="button" class="btn btn-outline-info btn-squared" th:if="${#authentication.getPrincipal().getId() == music.user.id}" th:href="@{/edit/{id}(id=${music.id})}" >
+                                    <i class="far fa-edit"></i> <nobr th:text="#{musics.edit}">Edit</nobr>
+                                </a>
+                            </div>
+                            <div>
+                                <a type="button" class="btn btn-outline-info btn-squared" th:if="${#authentication.getPrincipal().getId() == music.user.id}" th:href="@{/delete/{id}(id=${music.id})}" >
+                                    <i class="far fa-trash-alt"></i> <nobr th:text="#{musics.delete}">Delete</nobr>
+                                </a>
+                            </div>
+                            <div>
+                                <a type="button" class="btn btn-outline-info btn-squared" th:href="@{/show/{id}(id=${music.id})}" target="_blank">
+                                    <i class="fas fa-share-alt"></i> <nobr th:text="#{musics.share}">Share</nobr>
+                                </a>
+                            </div>
+                        </td>
+                        <td sec:authorize="isAnonymous()">
+                            <button type="button" class="btn btn-outline-info btn-squared" th:href="@{/show/{id}(id=${music.id})}">
+                                <i class="fas fa-share-alt"></i> <nobr th:text="#{musics.share}">Share</nobr>
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+
+                <nav aria-label="Pagination" th:if="${musics.totalPages gt 0}">
+                    <ul class="pagination justify-content-center font-weight-medium">
+                        <li class="page-item" th:classappend="${musics.number eq 0} ? 'disabled'">
+                            <a class="page-link svg-icon"
+                               th:href="@{/dashboard?page={id}(id=${musics.number lt 2 ? 1 : musics.number})}"
+                               th:aria-label="#{pagination.previous}"
+                               th:title="#{pagination.previoustitle}" rel="tooltip">
+                                <span aria-hidden="true" data-feather="chevrons-left" width="20" height="20"></span>
+                            </a>
+                        </li>
+                        <li class="page-item" th:classappend="${i eq musics.number + 1} ? 'active'"
+                            th:each="i : ${#numbers.sequence( 1, musics.totalPages, 1)}">
+                            <a class="page-link"
+                               th:href="@{/dashboard?page={id}(id=${i})}"
+                               th:text="${i}"
+                               th:title="${'Page '+ i}" data-toggle="tooltip"></a>
+                        </li>
+                        <li class="page-item" th:classappend="${musics.number + 1 eq musics.totalPages} ? 'disabled'">
+                            <a class="page-link svg-icon"
+                               th:href="@{/dashboard?page={id}(id=${musics.number + 2})}"
+                               th:aria-label="#{pagination.next}"
+                               th:title="#{pagination.nexttitle}" rel="tooltip">
+                                <span aria-hidden="true" data-feather="chevrons-right" width="20" height="20"></span>
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+            </div>
+        </div>
     </div>
 </div>
 </body>

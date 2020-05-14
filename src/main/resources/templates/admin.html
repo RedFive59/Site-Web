@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{default}">
+<head>
+    <title th:text="#{title.admin}">Admin</title>
+    <style>
+        .container{
+            max-width: 100%;
+        }
+        .board tr td {
+            height: 0;
+        }
+    </style>
+</head>
+<body>
+<div layout:fragment="content">
+    <h1 th:text="#{board.admin}">Admin board</h1>
+    <div sec:authorize="isAuthenticated()">
+        <hr><br>
+        <div>
+            <div th:switch="${musics}">
+                <h2 th:case="null" th:text="#{musics.nomusicposted}">No post</h2>
+                <div th:case="*">
+                    <h3><nobr th:text="#{musics.allusermusics}">All your musics</nobr></h3>
+                    <table class="board">
+                        <thead>
+                        <tr>
+                            <th th:text="#{musics.spotifylink}">Spotify link</th>
+                            <th th:text="#{musics.title}">Title</th>
+                            <th th:text="#{musics.artist}">Artist</th>
+                            <th th:text="#{musics.description}">Description</th>
+                            <th th:text="#{musics.options}" width="150">Options</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="music : ${musics}">
+                            <td>
+                                <a style="color:#17c671;" th:href="@{'https://open.spotify.com/track/' + ${music.link}}" target="_blank">
+                                    <i class="fas fa-external-link-alt"></i>
+                                </a>
+                            </td>
+                            <td th:text="${music.title}"></td>
+                            <td th:text="${music.artist}"></td>
+                            <td th:text="${music.description}"></td>
+                            <td sec:authorize="isAuthenticated()">
+                                <a type="button" th:href="@{/edit/{id}(id=${music.id})}" target="_blank">
+                                    <i class="far fa-edit"></i>
+                                </a>
+                                <a type="button" th:href="@{/delete/{id}(id=${music.id})}" >
+                                    <i class="far fa-trash-alt"></i>
+                                </a>
+                                <a type="button" th:href="@{/show/{id}(id=${music.id})}" target="_blank">
+                                    <i class="fas fa-share-alt"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <nav aria-label="Pagination" th:if="${musics.totalPages gt 0}">
+                        <ul class="pagination justify-content-center font-weight-medium">
+                            <li class="page-item" th:classappend="${musics.number eq 0} ? 'disabled'">
+                                <a class="page-link svg-icon"
+                                   th:href="@{/admin?&musicpage={idMusic}(idMusic=${musics.number lt 2 ? 1 : musics.number})}"
+                                   th:aria-label="#{pagination.previous}"
+                                   th:title="#{pagination.previoustitle}" rel="tooltip">
+                                    <span aria-hidden="true" data-feather="chevrons-left" width="20" height="20"></span>
+                                </a>
+                            </li>
+                            <li class="page-item" th:classappend="${i eq musics.number + 1} ? 'active'"
+                                th:each="i : ${#numbers.sequence( 1, musics.totalPages, 1)}">
+                                <a class="page-link"
+                                   th:href="@{/admin?musicpage={idMusic}(idMusic=${i})}"
+                                   th:text="${i}"
+                                   th:title="${'Page '+ i}" data-toggle="tooltip"></a>
+                            </li>
+                            <li class="page-item" th:classappend="${musics.number + 1 eq musics.totalPages} ? 'disabled'">
+                                <a class="page-link svg-icon"
+                                   th:href="@{/admin?musicpage={idMusic}(idMusic=${musics.number + 2})}"
+                                   th:aria-label="#{pagination.next}"
+                                   th:title="#{pagination.nexttitle}" rel="tooltip">
+                                    <span aria-hidden="true" data-feather="chevrons-right" width="20" height="20"></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+            <div th:switch="${users}">
+                <h2 th:case="null" th:text="#{users.nouser}">No user</h2>
+                <div th:case="*">
+                    <h3><nobr th:text="#{users.allusers}">All users</nobr></h3>
+                    <table class="board">
+                        <thead>
+                        <tr>
+                            <th th:text="#{users.id}">Id</th>
+                            <th th:text="#{users.email}">Email</th>
+                            <th th:text="#{users.name}">Name</th>
+                            <th th:text="#{users.enabled}">Enabled</th>
+                            <th th:text="#{users.roles}">Roles</th>
+                            <th th:text="#{users.options}" width="150">Options</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="user : ${users}">
+                            <td th:text="${user.id}"></td>
+                            <td th:text="${user.email}"></td>
+                            <td th:text="${user.name}"></td>
+                            <td th:text="${user.enabled}"></td>
+                            <td th:text="${user.roles}"></td>
+                            <td>
+                                <a type="button" th:href="@{/deleteuser/{id}(id=${user.id})}" >
+                                    <i class="far fa-trash-alt"></i>
+                                </a>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+
+                    <nav aria-label="Pagination" th:if="${users.totalPages gt 0}">
+                        <ul class="pagination justify-content-center font-weight-medium">
+                            <li class="page-item" th:classappend="${users.number eq 0} ? 'disabled'">
+                                <a class="page-link svg-icon"
+                                   th:href="@{/admin?userpage={idUser}(idUser=${users.number lt 2 ? 1 : users.number})}"
+                                   th:aria-label="#{pagination.previous}"
+                                   th:title="#{pagination.previoustitle}" rel="tooltip">
+                                    <span aria-hidden="true" data-feather="chevrons-left" width="20" height="20"></span>
+                                </a>
+                            </li>
+                            <li class="page-item" th:classappend="${j eq users.number + 1} ? 'active'"
+                                th:each="j : ${#numbers.sequence( 1, users.totalPages, 1)}">
+                                <a class="page-link"
+                                   th:href="@{/admin?userpage={idUser}(idUser=${j})}"
+                                   th:text="${j}"
+                                   th:title="${'Page '+ j}" data-toggle="tooltip"></a>
+                            </li>
+                            <li class="page-item" th:classappend="${users.number + 1 eq users.totalPages} ? 'disabled'">
+                                <a class="page-link svg-icon"
+                                   th:href="@{/admin?userpage={idUser}(idUser=${users.number + 2})}"
+                                   th:aria-label="#{pagination.next}"
+                                   th:title="#{pagination.nexttitle}" rel="tooltip">
+                                    <span aria-hidden="true" data-feather="chevrons-right" width="20" height="20"></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -6,6 +6,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.*;
 
+/**
+ * Entité Group
+ *
+ * Pas utilisé finalement
+ */
 @Document(collection = "group")
 public class Group {
 
