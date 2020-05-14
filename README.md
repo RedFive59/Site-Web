@@ -6,9 +6,10 @@ Les musiques sont envoyées par les utilisateurs qu'ils partagent en public, cel
 Les liens de musique sont des liens Spotify.
 
 ## Installation
+(J'ai fait le développement et les tests sur Windows 10 mais normalement il devrait fonctionner sur toutes les plateformes)
+
 Pour faire fonctionner ce code il vous faut :
 
-* Windows 10
 * [MongoDB Community Server](https://www.mongodb.com/download-center/community) pour créer la BDD et ainsi gérer les données
 * [Robo3T](https://robomongo.org/download) pour afficher la BDD
 * [Java JDK (1.8)](https://www.oracle.com/java/technologies/javase-jdk8-downloads.html) pour lancer le .jar du serveur (en localhost)
@@ -38,14 +39,29 @@ launch.bat
 Après le lancement de ce fichier vous aurez un terminal Windows que voici :
 ![Terminal](https://i.imgur.com/lofP7HG.png "Windows Terminal")
 
-Si vous voyez bien cette page de terminal alors vous pouvez simplement ouvrir votre navigateur, et accéder à la page [localhost:8080](localhost:8080)
+Le premier lancement peut durer entre 1 à 5 minutes selon votre connexion et selon la puissance de votre ordinateur. Il va télécharger les fichiers dont il a besoin pour lancer l'application
+
+J'ai remarqué en faisant le test d'une installation sur un autre PC que l'application pouvait parfois se lancer quelques minutes après que la console ait fini ces opérations.
+
+Si vous voyez bien cette page de terminal alors vous pouvez simplement ouvrir votre navigateur, et accéder à la page [localhost:8080](localhost:8080) 
 
 ## Aperçu
 Voici un aperçu du résultat final :
 ![Resultat](https://i.imgur.com/XApzMnh.png "Affichage du site")
 
+## Problèmes possibles
+Normalement il n'y a pas d'erreur mais voici une erreur que j'ai pu voir auparavant:
+
+Si votre page affiche une erreur et votre url ressemble à ça : 
+
+```localhost:8080/?lang=?-----?``` avec des lettres à la place des tirets alors remplacer le lien par ```localhost:8080/?lang=FR``` et choisissez un pays en haut à droite. (Erreur de variable locale liée à Javascript)
+
 ## Outils utilisées
 Pour editer mon code j'ai utilisé l'IDE [IntelliJ](https://www.jetbrains.com/fr-fr/idea/download/#section=windows) car il propose directement un terminal Windows implementé pour faire ses essais 
+
+Pour avoir un affichage plus présentable j'ai choisi d'utiliser la charte [Shards.css](https://designrevision.com/downloads/shards/) qui est un kit UI pour Bootstrap.
+
+J'ai également utilisé l'[API Spotify Web Java](https://github.com/thelinmichael/spotify-web-api-java) de [thelinmichael](https://github.com/thelinmichael) pour différentes opérations.
 
 ## Maquette de base du site
 Voici la maquette qui a servi à la création des pages Web :
