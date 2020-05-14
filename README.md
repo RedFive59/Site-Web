@@ -4,6 +4,7 @@
 
 Les musiques sont envoyées par les utilisateurs qu'ils partagent en public, celles-ci peuvent être liké ou disliké.
 Les liens de musique sont des liens Spotify.
+[Trello](https://trello.com/b/hE5KhqFs/projet-web)
 
 ## Installation
 (J'ai fait le développement et les tests sur Windows 10 mais normalement il devrait fonctionner sur toutes les plateformes)
