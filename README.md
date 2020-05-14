@@ -49,8 +49,10 @@ Si vous voyez bien cette page de terminal alors vous pouvez simplement ouvrir vo
 
 
 On peut noter que lors du premier du lancement, grâce au fichier WebsiteApplication.java des objets de test sont créés pour avoir directement un résultat de la première ouverture du site.
-Cela va ajouter un utilisateur appelé userTest (email=email@test.fr,mdp=pass), un post de musique faite par userTest et la création des rôles USER et ADMIN.
-Ces objets sont directement sauvegardé dans la BDD.
+
+Cela va ajouter un utilisateur appelé userTest (email=email@test.fr,mdp=pass), un post de musique fait par userTest et la création des rôles USER et ADMIN.
+
+Ces objets sont directement sauvegardé dans la BDD MongoDB.
 
 ## Aperçu
 Voici un aperçu du résultat final :
